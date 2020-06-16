@@ -1,5 +1,5 @@
 /* eslint-env node */
-const path = require("path");
+const path = require("path"); 
 
 const MODE_DEVELOPMENT = "development";
 const MODE_PRODUCTION = "production";
