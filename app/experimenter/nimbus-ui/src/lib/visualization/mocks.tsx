@@ -4,6 +4,29 @@
 
 import { SIGNIFICANCE } from "./constants";
 
+export function mockConfidenceInterval(significance = SIGNIFICANCE.NEUTRAL) {
+  switch (significance) {
+    case SIGNIFICANCE.POSITIVE:
+      return {
+        point: 45,
+        upper: 75,
+        lower: 5,
+      };
+    case SIGNIFICANCE.NEGATIVE:
+      return {
+        point: -5,
+        upper: -2,
+        lower: -54,
+      };
+    default:
+      return {
+        point: 10,
+        upper: 21,
+        lower: -3,
+      };
+  }
+}
+
 export const mockAnalysis = (modifications = {}) =>
   Object.assign(
     {

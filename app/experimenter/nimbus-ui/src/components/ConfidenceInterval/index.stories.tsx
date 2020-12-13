@@ -7,27 +7,25 @@ import { storiesOf } from "@storybook/react";
 import { withLinks } from "@storybook/addon-links";
 import ConfidenceInterval from ".";
 import { SIGNIFICANCE } from "../../lib/visualization/constants";
+import { mockConfidenceInterval } from "../../lib/visualization/mocks";
 
 storiesOf("visualization/ConfidenceInterval", module)
   .addDecorator(withLinks)
   .add("with positive significance", () => (
     <ConfidenceInterval
-      upper={65}
-      lower={45}
+      {...mockConfidenceInterval(SIGNIFICANCE.POSITIVE)}
       significance={SIGNIFICANCE.POSITIVE}
     />
   ))
   .add("with neutral significance", () => (
     <ConfidenceInterval
-      upper={65}
-      lower={45}
+      {...mockConfidenceInterval(SIGNIFICANCE.NEUTRAL)}
       significance={SIGNIFICANCE.NEUTRAL}
     />
   ))
   .add("with negative significance", () => (
     <ConfidenceInterval
-      upper={65}
-      lower={45}
+      {...mockConfidenceInterval(SIGNIFICANCE.NEGATIVE)}
       significance={SIGNIFICANCE.NEGATIVE}
     />
   ));

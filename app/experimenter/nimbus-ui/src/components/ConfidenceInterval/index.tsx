@@ -9,107 +9,71 @@ import React from "react";
 
 import { SIGNIFICANCE } from "../../lib/visualization/constants";
 
-const renderBounds = (lower: number, upper: number, significance: string) => {
-  const padding = <div className="col p-0" />;
-  const numbers = (
-    <>
-      <div
-        className={`${significance}-significance col text-left p-0 h6 font-weight-normal`}
-      >
-        {lower}%
-      </div>
-      <div
-        className={`${significance}-significance col text-right p-0 h6 font-weight-normal`}
-      >
-        {upper}%
-      </div>
-    </>
+const FixedLabel: React.FC<{
+  direction: "right" | "left";
+}> = ({ direction, children }) => {
+  return (
+    <span
+      className="small"
+      style={{
+        position: "absolute",
+        bottom: "100%",
+        [direction]: 0,
+      }}
+    >
+      {children}%
+    </span>
   );
+};
 
+function getColor(significance: string): string {
   switch (significance) {
     case SIGNIFICANCE.NEGATIVE:
-      return (
-        <>
-          {numbers}
-          {padding}
-          {padding}
-        </>
-      );
+      return "danger";
     case SIGNIFICANCE.POSITIVE:
-      return (
-        <>
-          {padding}
-          {padding}
-          {numbers}
-        </>
-      );
-    case SIGNIFICANCE.NEUTRAL:
-      return (
-        <>
-          {padding}
-          {numbers}
-          {padding}
-        </>
-      );
+      return "success";
+    default:
+      return "secondary";
   }
-};
-
-const renderLine = (significance: string) => {
-  let firstLine, secondLine, thirdLine;
-  firstLine = secondLine = thirdLine = "col";
-
-  if (SIGNIFICANCE.NEGATIVE === significance) {
-    firstLine = "col-md-1";
-    secondLine = "col-md-4";
-  }
-
-  if (SIGNIFICANCE.POSITIVE === significance) {
-    secondLine = "col-md-4";
-    thirdLine = "col-md-1";
-  }
-
-  return (
-    <>
-      <div className={`${firstLine} border-bottom border-dark border-3`} />
-      <div
-        className={`${secondLine} md-4 ml-md-auto py-2 ${significance} mb-n2`}
-      />
-      <div className={`${thirdLine} md-1 border-bottom border-dark border-3`} />
-    </>
-  );
-};
-
-const renderTick = (significance: string) => {
-  let position = "py-2";
-  if (SIGNIFICANCE.NEUTRAL === significance) {
-    position = "py-1 mt-2";
-  }
-
-  return <div className={`col border-left border-dark border-3 ${position}`} />;
-};
+}
 
 const ConfidenceInterval: React.FC<{
   upper: number;
   lower: number;
+  point: number;
   significance: string;
-}> = ({ upper, lower, significance }) => {
-  const bounds = renderBounds(lower, upper, significance);
-  const line = renderLine(significance);
-  const tick = renderTick(significance);
-
+}> = ({ upper, lower, point, significance }) => {
   return (
-    <div className="container">
-      <div className="row w-100 float-right">{bounds}</div>
-      <div className="row w-100 float-right">{line}</div>
+    <div className="mt-2" style={{ position: "relative", height: 50 }}>
       <div
-        className="row w-50 float-right"
-        data-testid={`${significance}-block`}
+        className="bgLine w-100 position-absolute border-top border-dark "
+        style={{ left: "0", top: "50%" }}
+      />
+      <div
+        className="control-tick position-absolute border-left border-dark pb-4"
+        style={{ left: "50%", top: "50%" }}
+      ></div>
+
+      <div
+        className={`bar position-absolute bg-${getColor(significance)}`}
+        style={{
+          height: "33%",
+          top: "33%",
+          width: `${(upper - lower) / 2}%`,
+          left: `${50 + lower / 2}%`,
+        }}
       >
-        {tick}
+        <FixedLabel direction="left">{lower}</FixedLabel>
+        <FixedLabel direction="right">{upper}</FixedLabel>
       </div>
-      <div className="row w-100 float-right h6">
-        <div className="col d-flex justify-content-center">control</div>
-      </div>
+      <div
+        className="point-tick position-absolute pb-3"
+        style={{
+          borderLeft: "2px solid rgba(0, 0, 0, 0.2)",
+          left: `${50 + point / 2}%`,
+          top: "33%",
+        }}
+      />
     </div>
   );
 };

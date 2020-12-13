@@ -103,15 +103,17 @@ const conversionCountField = (totalConversions: number, totalUsers: number) => {
 const conversionChangeField = (
   lower: number,
   upper: number,
+  point: number,
   significance: string | undefined,
 ) => {
-  if (!lower || !upper || !significance) {
+  if (!lower || !upper || !significance || !point) {
     return <div className="font-italic">---baseline---</div>;
   }
 
   lower = Math.round(lower * 1000) / 10;
   upper = Math.round(upper * 1000) / 10;
-  return <ConfidenceInterval {...{ upper, lower, significance }} />;
+  point = Math.round(point * 1000) / 10;
+  return <ConfidenceInterval {...{ upper, lower, point, significance }} />;
 };
 
 const populationField = (point: number, percent: number | undefined) => {
@@ -202,7 +204,7 @@ const TableVisualizationRow: React.FC<{
         field = conversionCountField(count, userCountMetric);
         break;
       case DISPLAY_TYPE.CONVERSION_CHANGE:
-        field = conversionChangeField(lower, upper, significance);
+        field = conversionChangeField(lower, upper, point, significance);
         break;
     }
   }
