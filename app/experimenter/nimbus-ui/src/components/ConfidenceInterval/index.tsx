@@ -11,10 +11,11 @@ import { SIGNIFICANCE } from "../../lib/visualization/constants";
 
 const FixedLabel: React.FC<{
   direction: "right" | "left";
-}> = ({ direction, children }) => {
+  significance: string;
+}> = ({ direction, significance, children }) => {
   return (
     <span
-      className="small"
+      className={`small text-${getColor(significance)}`}
       style={{
         position: "absolute",
         bottom: "100%",
@@ -44,36 +45,45 @@ const ConfidenceInterval: React.FC<{
   significance: string;
 }> = ({ upper, lower, point, significance }) => {
   return (
-    <div className="mt-2" style={{ position: "relative", height: 50 }}>
-      <div
-        className="bgLine w-100 position-absolute border-top border-dark "
-        style={{ left: "0", top: "50%" }}
-      />
-      <div
-        className="control-tick position-absolute border-left border-dark pb-4"
-        style={{ left: "50%", top: "50%" }}
-      ></div>
+    <div className="confidence-interval">
+      <div className="mt-2" style={{ position: "relative", height: 50 }}>
+        <div
+          className="bgLine w-100 position-absolute border-top border-dark "
+          style={{ left: "0", top: "50%" }}
+        />
+        <div
+          className="control-tick position-absolute border-left border-dark"
+          style={{ left: "50%", top: "50%", height: "33%" }}
+        ></div>
 
-      <div
-        className={`bar position-absolute bg-${getColor(significance)}`}
-        style={{
-          height: "33%",
-          top: "33%",
-          width: `${(upper - lower) / 2}%`,
-          left: `${50 + lower / 2}%`,
-        }}
-      >
-        <FixedLabel direction="left">{lower}</FixedLabel>
-        <FixedLabel direction="right">{upper}</FixedLabel>
+        <div
+          className={`bar position-absolute bg-${getColor(significance)}`}
+          style={{
+            height: "33%",
+            top: "33%",
+            width: `${(upper - lower) / 2}%`,
+            left: `${50 + lower / 2}%`,
+          }}
+        >
+          <FixedLabel significance={significance} direction="left">
+            {lower}
+          </FixedLabel>
+          <FixedLabel significance={significance} direction="right">
+            {upper}
+          </FixedLabel>
+        </div>
+        <div
+          className="point-tick position-absolute pb-3"
+          style={{
+            borderLeft: "2px solid rgba(0, 0, 0, 0.2)",
+            left: `${50 + point / 2}%`,
+            top: "33%",
+          }}
+        />
       </div>
-      <div
-        className="point-tick position-absolute pb-3"
-        style={{
-          borderLeft: "2px solid rgba(0, 0, 0, 0.2)",
-          left: `${50 + point / 2}%`,
-          top: "33%",
-        }}
-      />
+      <div className="text-center" style={{ lineHeight: 1 }}>
+        control
+      </div>
     </div>
   );
 };
