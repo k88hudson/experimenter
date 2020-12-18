@@ -67,7 +67,7 @@ const AppLayoutWithExperiment = ({
   } = useExperiment(slug);
   const {
     execute: fetchAnalysis,
-    status: analysisStatus,
+    loading: analysisLoading,
     result: analysis,
   } = useAnalysis();
   const [analysisFetched, setAnalysisFetched] = useState<boolean>(false);
@@ -108,7 +108,7 @@ const AppLayoutWithExperiment = ({
     };
   }, [startPolling, stopPolling, experiment, polling]);
 
-  if (loading || (analysisRequired && analysisStatus === "loading")) {
+  if (loading || (analysisRequired && analysisLoading)) {
     return <PageLoading />;
   }
 
