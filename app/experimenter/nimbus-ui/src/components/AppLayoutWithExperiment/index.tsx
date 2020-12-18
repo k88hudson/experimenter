@@ -71,8 +71,13 @@ const AppLayoutWithExperiment = ({
     result: analysis,
   } = useAnalysis();
   const [analysisFetched, setAnalysisFetched] = useState<boolean>(false);
-
   const experimentStatus = getStatus(experiment);
+
+  // We should keep the loading spinner up for pages that requrie analysis when:
+  // a) The analysis has not been fetched yet
+  // b) The analysis fetching is in a loading state
+  const shouldWaitForAnalysisResponse =
+    analysisRequired && (analysisLoading || !analysisFetched);
 
   // If the redirect prop function is supplied let's call it with
   // experiment status, review, and analysis details. If it returns
@@ -108,7 +113,7 @@ const AppLayoutWithExperiment = ({
     };
   }, [startPolling, stopPolling, experiment, polling]);
 
-  if (loading || (analysisRequired && analysisLoading)) {
+  if (loading || shouldWaitForAnalysisResponse) {
     return <PageLoading />;
   }
 
